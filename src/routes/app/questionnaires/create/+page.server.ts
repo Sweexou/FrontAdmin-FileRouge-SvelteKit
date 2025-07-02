@@ -1,21 +1,6 @@
 import { questionnaireService } from '$lib/api/questionnaire';
 import { error, redirect } from '@sveltejs/kit';
 
-function mapTextToLevel(difficulty: string): number {
-  switch (difficulty) {
-    case 'Débutant':
-      return 0;
-    case 'Intermédiaire':
-      return 1;
-    case 'Avancé':
-      return 2;
-    case 'Expert':
-      return 3;
-    default:
-      return 0;
-  }
-}
-
 export const actions = {
   default: async ({ locals, request }) => {
     const token = locals.token;
@@ -30,13 +15,16 @@ export const actions = {
     const examDate = formData.get('examDate') as string;
     const questionsData = formData.get('questions') as string;
 
+    console.log('Form data received:', { title, description, difficulty, examDate });
+
     try {
       const questions = JSON.parse(questionsData);
+      console.log('Questions parsed:', questions);
       
       const questionnaire = {
         title,
         description,
-        level: mapTextToLevel(difficulty), // Convertir en nombre
+        level: difficulty, // Garde le texte ou utilise mapTextToLevel() si nécessaire
         examDate,
         questions: questions.map((q: any) => ({
           number1: q.number1,
@@ -46,12 +34,18 @@ export const actions = {
         }))
       };
 
-      await questionnaireService.createQuestionnaire(token, questionnaire);
-      throw redirect(303, '/app/questionnaires');
+      console.log('Questionnaire to send:', questionnaire);
+      
+      const result = await questionnaireService.createQuestionnaire(token, questionnaire);
+      console.log('API response:', result);
+      
+      
     } catch (err) {
+      console.error('Error creating questionnaire:', err);
       return {
-        error: 'Failed to create questionnaire'
+        error: `Failed to create questionnaire: ${err.message}`
       };
     }
+    throw redirect(303, '/app/questionnaires');
   }
 };

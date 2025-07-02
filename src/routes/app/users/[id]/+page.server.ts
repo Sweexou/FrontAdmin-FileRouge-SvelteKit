@@ -37,9 +37,9 @@ export const actions = {
 
     try {
       await userDetailService.deleteUser(token, params.id);
-      throw redirect(303, '/app/users');
     } catch (err) {
       throw error(500, 'Failed to delete user');
     }
+    throw redirect(303, '/app/users');
   }
 };

@@ -7,7 +7,7 @@
   {#if form?.error}
     <div class="error-message">{form.error}</div>
   {/if}
-  <input name="email" type="email" placeholder="Email" required />
+  <input name="identifier" type="text" placeholder="Identifiant" required />
   <input name="password" type="password" placeholder="Mot de passe" required />
   <button type="submit">Se connecter</button>
 </form>

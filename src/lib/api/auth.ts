@@ -1,13 +1,13 @@
 import { API_BASE_URL } from '$env/static/private';
 
 const authService = {
-  login: async (email: string, password: string) => {
+  login: async (identifier: string, password: string) => {
     const response = await fetch(`${API_BASE_URL}/api/Auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ identifier, password })
     });
 
     const data = await response.json();
